@@ -2,21 +2,20 @@ import React, { useContext, useState } from 'react';
 import { FormContext } from '../context/FormContext';
 
 const Step3 = () => {
-  const { nextStep, prevStep, setAddons } = useContext(FormContext);
+  const { nextStep, prevStep, setAddons, plan } = useContext(FormContext);
   const [selectedAddons, setSelectedAddons] = useState([]);
 
   const addonsOptions = [
-    { name: 'Online service', price: 1 },
-    { name: 'Larger storage', price: 2 },
-    { name: 'Customizable profile', price: 2 },
+    { name: 'Online service', price: plan?.price.includes('yr') ? 90 : 9 },
+    { name: 'Larger storage', price: plan?.price.includes('yr') ? 120 : 12 },
+    { name: 'Customizable profile', price: plan?.price.includes('yr') ? 150 : 15 },
   ];
 
   const handleAddonToggle = (addon) => {
-    setSelectedAddons((prev) => 
-      prev.includes(addon)
-        ? prev.filter((item) => item !== addon)
-        : [...prev, addon]
-    );
+    setSelectedAddons((prev) => {
+      const exists = prev.find((item) => item.name === addon.name);
+      return exists ? prev.filter((item) => item.name !== addon.name) : [...prev, addon];
+    });
   };
 
   const handleNext = () => {
@@ -34,11 +33,11 @@ const Step3 = () => {
             <input 
               type="checkbox" 
               id={addon.name} 
-              checked={selectedAddons.includes(addon.name)} 
-              onChange={() => handleAddonToggle(addon.name)} 
+              checked={selectedAddons.some((item) => item.name === addon.name)} 
+              onChange={() => handleAddonToggle(addon)} 
             />
             <label htmlFor={addon.name} className="ml-2">
-              {addon.name} (+${addon.price}/mo)
+              {addon.name} (+${addon.price}/{plan?.price.includes('yr') ? 'yr' : 'mo'})
             </label>
           </div>
         ))}

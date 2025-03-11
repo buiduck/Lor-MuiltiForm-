@@ -8,7 +8,7 @@ export const FormProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState({});
   const [plan, setPlan] = useState(null);
   const [addons, setAddons] = useState([]);
-
+  const [isYearly, setIsYearly] = useState(false);
   const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => prev - 1);
 
@@ -29,6 +29,8 @@ export const FormProvider = ({ children }) => {
         userInfo,
         setUserInfo,
         plan,
+        isYearly,
+        setIsYearly,
         setPlan,
         addons,
         setAddons,

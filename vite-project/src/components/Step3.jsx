@@ -1,15 +1,19 @@
-import React, { useContext, useState } from 'react';
-import { FormContext } from '../context/FormContext';
+import React, { useContext, useState, useEffect } from "react";
+import { FormContext } from "../context/FormContext";
 
 const Step3 = () => {
-  const { nextStep, prevStep, setAddons, plan } = useContext(FormContext);
-  const [selectedAddons, setSelectedAddons] = useState([]);
+  const { nextStep, prevStep, setAddons, plan, addons } = useContext(FormContext);
+  const [selectedAddons, setSelectedAddons] = useState(addons || []);
 
   const addonsOptions = [
-    { name: 'Online service', price: plan?.price.includes('yr') ? 90 : 9 },
-    { name: 'Larger storage', price: plan?.price.includes('yr') ? 120 : 12 },
-    { name: 'Customizable profile', price: plan?.price.includes('yr') ? 150 : 15 },
+    { name: "Online service", price: plan?.price.includes("yr") ? 90 : 9 },
+    { name: "Larger storage", price: plan?.price.includes("yr") ? 120 : 12 },
+    { name: "Customizable profile", price: plan?.price.includes("yr") ? 150 : 15 },
   ];
+
+  useEffect(() => {
+    setSelectedAddons(addons || []); // Cập nhật lại khi quay lại step 3
+  }, [addons]);
 
   const handleAddonToggle = (addon) => {
     setSelectedAddons((prev) => {
@@ -30,24 +34,21 @@ const Step3 = () => {
       <div>
         {addonsOptions.map((addon) => (
           <div key={addon.name} className="flex items-center mb-4">
-            <input 
-              type="checkbox" 
-              id={addon.name} 
-              checked={selectedAddons.some((item) => item.name === addon.name)} 
-              onChange={() => handleAddonToggle(addon)} 
+            <input
+              type="checkbox"
+              id={addon.name}
+              checked={selectedAddons.some((item) => item.name === addon.name)}
+              onChange={() => handleAddonToggle(addon)}
             />
             <label htmlFor={addon.name} className="ml-2">
-              {addon.name} (+${addon.price}/{plan?.price.includes('yr') ? 'yr' : 'mo'})
+              {addon.name} (+${addon.price}/{plan?.price.includes("yr") ? "yr" : "mo"})
             </label>
           </div>
         ))}
       </div>
       <div className="flex justify-between mt-4">
         <button onClick={prevStep} className="bg-gray-500 text-white p-2">Go Back</button>
-        <button 
-          onClick={handleNext} 
-          className="bg-blue-800 text-white p-2" 
-          disabled={selectedAddons.length === 0}>
+        <button onClick={handleNext} className="bg-blue-800 text-white p-2">
           Next Step
         </button>
       </div>
